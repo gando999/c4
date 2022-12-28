@@ -50,6 +50,10 @@ class Column:
       self.slots[last_empty_slot] = token
     return last_empty_slot
 
+  def has_empty_slots(self) -> bool:
+    '''Returns true if the column in not full'''
+    return self.last_empty_slot() > -1
+
   def height(self) -> int:
     '''Represents the height of the column'''
     return len(self.slots)
@@ -65,6 +69,14 @@ class Grid:
     self.width = width
     for _ in range(width):
       self.columns.append(Column(height))
+
+  def has_free_slots(self) -> bool:
+    '''Checks to see if the grid still has free spaces'''
+    for column in self.columns:
+      has_empty_slots = column.has_empty_slots()
+      if has_empty_slots is True:
+          return True # return early
+    return False
 
   def add_counter(self, column_idx: int, token: str) -> int:
     '''Adds a counter to the grid at column specified'''

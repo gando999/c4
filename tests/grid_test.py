@@ -121,6 +121,7 @@ class TestColumnCollection:
   def test_column_create_with_empty_slots(self):
     testee = Column(6)
     assert testee.height() == 6
+    assert True == testee.has_empty_slots()
 
   def test_last_empty_slot_when_empty(self):
     testee = Column(6)
@@ -138,8 +139,10 @@ class TestColumnCollection:
     testee.add(SYMBOL_1)
     testee.add(SYMBOL_1)
     testee.add(SYMBOL_1)
+    assert True == testee.has_empty_slots()
     testee.add(SYMBOL_1)
     assert testee.last_empty_slot() == -1
+    assert False == testee.has_empty_slots()
 
 class TestGridCollection:
 
@@ -213,3 +216,12 @@ class TestGridCollection:
   def test_add_counter_outside_range(self):
     testee = Grid()
     assert -1 == testee.add_counter(99, SYMBOL_1)
+
+  def test_has_free_slots(self):
+      testee = Grid(2, 2)
+      testee.add_counter(0, SYMBOL_1)
+      testee.add_counter(0, SYMBOL_1)
+      testee.add_counter(1, SYMBOL_1)
+      assert True == testee.has_free_slots()
+      testee.add_counter(1, SYMBOL_1)
+      assert False == testee.has_free_slots()

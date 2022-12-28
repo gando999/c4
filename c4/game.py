@@ -6,6 +6,7 @@ PLAYER_2_TOKEN = 'o'
 GAME_STATE_IN_PROGRESS = 0
 GAME_STATE_WINNER = 1
 GAME_STATE_BAD_INPUT = 2
+GAME_STATE_DRAW = 3
 
 class Player:
   '''Represents a player of the game'''
@@ -54,11 +55,13 @@ class ConnectFourGame:
     '''Take a turn at the game'''
     column = input(
       'Where would you like to drop your token {} [0-{}]? '.format(
-        self.current_player.name, self.game_grid.row_count()
+        self.current_player.name, self.game_grid.column_count()
       ))
     result = self.update_grid(int(column), self.current_player.token)
     if result < 0:
       return GAME_STATE_BAD_INPUT
+    if self.game_grid.has_free_slots() is False:
+      return GAME_STATE_DRAW
     return self.check_state()
 
 def start_game() -> None:
@@ -69,7 +72,7 @@ def start_game() -> None:
   while True:
     current_state = game.take_turn()
     game.show_grid()
-    if current_state == GAME_STATE_WINNER:
+    if current_state == GAME_STATE_WINNER or current_state == GAME_STATE_DRAW:
       break
     if current_state == GAME_STATE_BAD_INPUT:
       print('Oops! The column you specified is either full or out of range, please try again! ')
@@ -77,7 +80,10 @@ def start_game() -> None:
       continue
     game.switch_player()
   print()
-  print('Congratulations {} you have won the game!!!'.format(game.current_player.name))
+  if current_state == GAME_STATE_WINNER:
+    print('Congratulations {} you have won the game!!!'.format(game.current_player.name))
+  else:
+    print('There are no spaces left in the grid!! The game is a draw.')
   print()
 
 def main() -> None:

@@ -2,6 +2,7 @@ from c4.game import (
   ConnectFourGame,
   GAME_STATE_IN_PROGRESS,
   GAME_STATE_WINNER,
+  GAME_STATE_DRAW,
   PLAYER_1_TOKEN,
   PLAYER_2_TOKEN,
 )
@@ -59,3 +60,11 @@ class TestConnectFourGameCollection:
   def test_out_of_range_token(self):
     testee = ConnectFourGame('p1', 'p2', 4, 4)
     assert -1 == testee.update_grid(100, SYMBOL_1)
+
+  def test_draw_state(self):
+    testee = ConnectFourGame('p1', 'p2', 2, 2)
+    testee.update_grid(0, SYMBOL_1)
+    testee.update_grid(0, SYMBOL_1)
+    testee.update_grid(1, SYMBOL_1)
+    testee.update_grid(1, SYMBOL_1)
+    assert False == testee.game_grid.has_free_slots()
